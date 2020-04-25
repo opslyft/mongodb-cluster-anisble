@@ -1,0 +1,32 @@
+[all:vars]
+ansible_connection=ssh
+ansible_user=root
+ansible_ssh_private_key_file=/Users/aayushkumarjarvis/terraform-jmeter/.ssh/jmeter
+
+[all]
+mongo1 access_ip=138.197.3.99 ansible_host=138.197.3.99 ip=138.197.3.99
+mongo2 access_ip=159.203.117.165 ansible_host=159.203.117.165 ip=159.203.117.165
+mongo3 access_ip=159.203.123.40 ansible_host=159.203.123.40 ip=159.203.123.40
+
+#The mongo servers need a mongod_port variable set, and they must not conflict.
+[mongo_servers]
+mongo1 mongod_port=2700 
+mongo2 mongod_port=2701
+mongo3 mongod_port=2702
+
+#The list of servers where replication should happen, by default include all servers
+[replication_servers]
+mongo1
+mongo2
+mongo3
+
+#The list of mongodb configuration servers, make sure it is 1 or 3
+[mongoc_servers]
+mongo1
+mongo2
+mongo3
+
+#The list of servers where mongos servers would run.
+[mongos_servers]
+mongo1
+mongo2
