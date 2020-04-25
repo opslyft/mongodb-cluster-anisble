@@ -1,5 +1,5 @@
 ---
-- name: add  hosts file
+- name: Create the hosts file for all machines
   template: src=hosts.j2 dest=/etc/hosts
 
 - name: set selinux permissive
@@ -36,10 +36,25 @@
    - pip
     
 - name: Create the data directory for the namenode metadata
-  file: path={{ mongodb_datadir_prefix }} owner=root group=root state=directory setype=mongod_var_lib_t recurse=true
+  file: path={{ mongodb_datadir_prefix }} state=directory setype=mongod_var_lib_t recurse=true
 
 - name: create log directory for mongodb
-  file: path=/var/log/mongo state=directory owner=root group=root setype=mongod_log_t recurse=true
+  file: path=/var/log/mongo state=directory setype=mongod_log_t recurse=true
 
 - name: create run directory for mongodb
-  file: path=/var/run/mongo state=directory owner=root group=root setype=mongod_var_run_t seuser=system_u recurse=true
+  file: path=/var/run/mongo state=directory setype=mongod_var_run_t seuser=system_u recurse=true
+
+- name: Configure system settings, file descriptors and number of threads
+  pam_limits:
+    domain: '*'
+    limit_type: "{{item.limit_type}}"
+    limit_item: "{{item.limit_item}}"
+    value: "{{item.value}}"
+  with_items:
+    - { limit_type: '-', limit_item: 'nofile', value: 500000 }
+    - { limit_type: '-', limit_item: 'nproc', value: 500000 }
+    - { limit_type: 'soft', limit_item: 'memlock', value: unlimited }
+    - { limit_type: 'hard', limit_item: 'memlock', value: unlimited }
+
+- name: reload settings from all system configuration files
+  shell: sysctl --system
