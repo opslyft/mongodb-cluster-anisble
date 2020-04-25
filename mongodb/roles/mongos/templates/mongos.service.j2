@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=root
 Type=forking
-ExecStart=/usr/bin/mongos --quiet --config /etc/mongos.conf
+ExecStart=/usr/bin/mongos --maxConns=60000 --quiet --config /etc/mongos.conf
 
 [Install]
 WantedBy=multi-user.target

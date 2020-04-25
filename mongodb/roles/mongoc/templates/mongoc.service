@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=root
 Type=forking
-ExecStart=/usr/bin/mongod --quiet --config /etc/mongoc.conf
+ExecStart=/usr/bin/mongod --maxConns=60000 --quiet --config /etc/mongoc.conf
 
 [Install]
 WantedBy=multi-user.target
