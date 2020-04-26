@@ -5,6 +5,13 @@ After=network.target
 [Service]
 User=root
 Type=forking
+Restart=on-failure
+LimitFSIZE=infinity
+LimitCPU=infinity
+LimitAS=infinity
+LimitMEMLOCK=infinity
+LimitNOFILE=64000
+LimitNPROC=64000
 ExecStart=/usr/bin/mongod --quiet --maxConns=60000 --config /etc/mongod-{{ inventory_hostname }}.conf
 
 [Install]

@@ -4,6 +4,13 @@ After=network.target
 
 [Service]
 User=root
+Restart=on-failure
+LimitFSIZE=infinity
+LimitCPU=infinity
+LimitAS=infinity
+LimitMEMLOCK=infinity
+LimitNOFILE=64000
+LimitNPROC=64000
 Type=forking
 ExecStart=/usr/bin/mongod --maxConns=60000 --quiet --config /etc/mongoc.conf
 
